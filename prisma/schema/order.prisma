@@ -1,0 +1,92 @@
+enum OrderStatus {
+  PENDING
+  PAID
+  SHIPPED
+  DELIVERED
+  CANCELLED
+  PROCESSING
+  READY_FOR_PICKUP
+  RETURNED
+}
+
+model Order {
+  id        String   @id @default(uuid())
+  number    String   @unique
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  totalPrice Decimal     @db.Decimal(10, 2) @map("total_price")
+  status     OrderStatus @default(PENDING)
+
+  userId           String @map("user_id")
+  addressId        Int    @map("address_id")
+  paymentMethodId  Int    @map("payment_method_id")
+  deliveryMethodId Int    @map("delivery_method_id")
+
+  user           User            @relation(fields: [userId], references: [id])
+  address        DeliveryAddress @relation(fields: [addressId], references: [id])
+  paymentMethod  PaymentMethod   @relation(fields: [paymentMethodId], references: [id])
+  deliveryMethod DeliveryMethod  @relation(fields: [deliveryMethodId], references: [id])
+
+  items OrderItem[]
+
+  @@index([userId])
+  @@index([addressId])
+  @@index([paymentMethodId])
+  @@index([deliveryMethodId])
+  @@map("orders")
+}
+
+model OrderItem {
+  id Int @id @default(autoincrement())
+
+  orderId   String @map("order_id")
+  productId String @map("product_id")
+
+  quantity Int
+  price    Decimal @db.Decimal(10, 2)
+
+  order   Order   @relation(fields: [orderId], references: [id])
+  product Product @relation(fields: [productId], references: [id])
+
+  @@index([orderId])
+  @@index([productId])
+  @@map("order_items")
+}
+
+model DeliveryAddress {
+  id       Int     @id @default(autoincrement())
+  address  String
+  entrance String?
+  floor    String?
+  intercom String?
+
+  userId String @map("user_id")
+
+  user User @relation(fields: [userId], references: [id])
+
+  orders Order[]
+
+  @@index([userId])
+  @@map("delivery_addresses")
+}
+
+model PaymentMethod {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  orders Order[]
+
+  @@map("payment_methods")
+}
+
+model DeliveryMethod {
+  id    Int     @id @default(autoincrement())
+  name  String
+  price Decimal @db.Decimal(10, 2)
+
+  orders Order[]
+
+  @@map("delivery_methods")
+}

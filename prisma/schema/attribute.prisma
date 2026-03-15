@@ -1,0 +1,97 @@
+model Category {
+  id   Int    @id @default(autoincrement())
+  name String
+  slug String @unique
+
+  parentId Int? @map("parent_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  parent   Category?  @relation("CategoryHierarchy", fields: [parentId], references: [id])
+  children Category[] @relation("CategoryHierarchy")
+
+  products                Product[]
+  categoryAttributeGroups CategoryAttributeGroup[]
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+model AttributeGroup {
+  id         Int         @id @default(autoincrement())
+  name       String      @unique
+  attributes Attribute[]
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  categoryAttributeGroups CategoryAttributeGroup[]
+
+  @@map("attribute_groups")
+}
+
+model CategoryAttributeGroup {
+  categoryId       Int @map("category_id")
+  attributeGroupId Int @map("attribute_group_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category        Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+  attribute_group AttributeGroup @relation(fields: [attributeGroupId], references: [id], onDelete: Cascade)
+
+  @@id([categoryId, attributeGroupId])
+  @@map("category_attribute_groups")
+}
+
+model Attribute {
+  id   Int    @id @default(autoincrement())
+  name String
+
+  attributeGroupId Int @map("attribute_group_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  attribute_group AttributeGroup @relation(fields: [attributeGroupId], onDelete: Cascade, references: [id])
+
+  values AttributeValue[]
+
+  @@index([attributeGroupId])
+  @@map("attributes")
+}
+
+model AttributeValue {
+  id    Int    @id @default(autoincrement())
+  value String
+  slug  String
+
+  attributeId Int @map("attribute_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  attribute Attribute @relation(fields: [attributeId], references: [id])
+
+  products ProductAttributeValue[]
+
+  @@index([attributeId])
+  @@map("attribute_values")
+}
+
+model ProductAttributeValue {
+  productId        String @map("product_id")
+  attributeValueId Int    @map("attribute_value_id")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  product        Product        @relation(fields: [productId], references: [id])
+  attributeValue AttributeValue @relation(fields: [attributeValueId], references: [id])
+
+  @@id([productId, attributeValueId])
+  @@index([attributeValueId])
+  @@index([productId])
+  @@map("product_attribute_values")
+}

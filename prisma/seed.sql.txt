@@ -1,0 +1,224 @@
+BEGIN;
+
+-- Users (5 rows)
+INSERT INTO users (id, email, password, role, name, surname, created_at, updated_at)
+VALUES
+  ('11111111-1111-1111-1111-111111111111', 'user1@example.com', 'password1', 'USER', 'User', 'One', NOW(), NOW()),
+  ('22222222-2222-2222-2222-222222222222', 'user2@example.com', 'password2', 'USER', 'User', 'Two', NOW(), NOW()),
+  ('33333333-3333-3333-3333-333333333333', 'user3@example.com', 'password3', 'USER', 'User', 'Three', NOW(), NOW()),
+  ('44444444-4444-4444-4444-444444444444', 'admin1@example.com', 'password4', 'ADMIN', 'Admin', 'One', NOW(), NOW()),
+  ('55555555-5555-5555-5555-555555555555', 'guest1@example.com', 'password5', 'GUEST', 'Guest', 'One', NOW(), NOW());
+
+-- Categories (5 rows)
+INSERT INTO categories (id, name, slug, parent_id, created_at, updated_at)
+VALUES
+  (1, 'Living Room', 'living-room', NULL, NOW(), NOW()),
+  (2, 'Bedroom', 'bedroom', NULL, NOW(), NOW()),
+  (3, 'Kitchen', 'kitchen', NULL, NOW(), NOW()),
+  (4, 'Office', 'office', NULL, NOW(), NOW()),
+  (5, 'Outdoor', 'outdoor', NULL, NOW(), NOW());
+
+-- Brands (5 rows)
+INSERT INTO brands (id, name, slug, created_at, updated_at)
+VALUES
+  (1, 'Brand A', 'brand-a', NOW(), NOW()),
+  (2, 'Brand B', 'brand-b', NOW(), NOW()),
+  (3, 'Brand C', 'brand-c', NOW(), NOW()),
+  (4, 'Brand D', 'brand-d', NOW(), NOW()),
+  (5, 'Brand E', 'brand-e', NOW(), NOW());
+
+-- Collections (5 rows)
+INSERT INTO collections (id, name, slug, description, created_at, updated_at)
+VALUES
+  (1, 'Modern', 'modern', 'Modern collection', NOW(), NOW()),
+  (2, 'Classic', 'classic', 'Classic collection', NOW(), NOW()),
+  (3, 'Minimal', 'minimal', 'Minimal collection', NOW(), NOW()),
+  (4, 'Industrial', 'industrial', 'Industrial collection', NOW(), NOW()),
+  (5, 'Scandinavian', 'scandinavian', 'Scandinavian collection', NOW(), NOW());
+
+-- Attribute Groups (5 rows)
+INSERT INTO attribute_groups (id, name, created_at, updated_at)
+VALUES
+  (1, 'Size', NOW(), NOW()),
+  (2, 'Color', NOW(), NOW()),
+  (3, 'Material', NOW(), NOW()),
+  (4, 'Style', NOW(), NOW()),
+  (5, 'Usage', NOW(), NOW());
+
+-- Attributes (5 rows, linked to first two groups)
+INSERT INTO attributes (id, name, attribute_group_id, created_at, updated_at)
+VALUES
+  (1, 'Small', 1, NOW(), NOW()),
+  (2, 'Medium', 1, NOW(), NOW()),
+  (3, 'Large', 1, NOW(), NOW()),
+  (4, 'Red', 2, NOW(), NOW()),
+  (5, 'Blue', 2, NOW(), NOW());
+
+-- Attribute Values (5 rows)
+INSERT INTO attribute_values (id, value, slug, attribute_id, created_at, updated_at)
+VALUES
+  (1, 'Small', 'small', 1, NOW(), NOW()),
+  (2, 'Medium', 'medium', 2, NOW(), NOW()),
+  (3, 'Large', 'large', 3, NOW(), NOW()),
+  (4, 'Red', 'red', 4, NOW(), NOW()),
+  (5, 'Blue', 'blue', 5, NOW(), NOW());
+
+-- CategoryAttributeGroup (5 rows, linking categories and attribute groups)
+INSERT INTO category_attribute_groups (category_id, attribute_group_id, created_at, updated_at)
+VALUES
+  (1, 1, NOW(), NOW()),
+  (1, 2, NOW(), NOW()),
+  (2, 1, NOW(), NOW()),
+  (2, 2, NOW(), NOW()),
+  (3, 3, NOW(), NOW());
+
+-- Products (5 rows)
+INSERT INTO products (
+  id,
+  name,
+  slug,
+  price,
+  description,
+  available_quantity,
+  is_active,
+  brand_id,
+  category_id,
+  created_at,
+  updated_at
+)
+VALUES
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'Product 1', 'product-1', 100.00, 'Description for product 1', 10, TRUE, 1, 1, NOW(), NOW()),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'Product 2', 'product-2', 110.00, 'Description for product 2', 20, TRUE, 2, 2, NOW(), NOW()),
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc', 'Product 3', 'product-3', 120.00, 'Description for product 3', 30, TRUE, 3, 3, NOW(), NOW()),
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', 'Product 4', 'product-4', 130.00, 'Description for product 4', 40, TRUE, 4, 4, NOW(), NOW()),
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 'Product 5', 'product-5', 140.00, 'Description for product 5', 50, TRUE, 5, 5, NOW(), NOW());
+
+-- Product Images (5 rows)
+INSERT INTO product_images (id, url, position, is_main, product_id, created_at, updated_at)
+VALUES
+  ('f1111111-1111-1111-1111-111111111111', 'https://example.com/product-1.jpg', 0, TRUE, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NOW(), NOW()),
+  ('f2222222-2222-2222-2222-222222222222', 'https://example.com/product-2.jpg', 0, TRUE, 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', NOW(), NOW()),
+  ('f3333333-3333-3333-3333-333333333333', 'https://example.com/product-3.jpg', 0, TRUE, 'cccccccc-cccc-cccc-cccc-cccccccccccc', NOW(), NOW()),
+  ('f4444444-4444-4444-4444-444444444444', 'https://example.com/product-4.jpg', 0, TRUE, 'dddddddd-dddd-dddd-dddd-dddddddddddd', NOW(), NOW()),
+  ('f5555555-5555-5555-5555-555555555555', 'https://example.com/product-5.jpg', 0, TRUE, 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', NOW(), NOW());
+
+-- Product Collections (5 rows)
+INSERT INTO product_collections (product_id, collection_id, created_at, updated_at)
+VALUES
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 1, NOW(), NOW()),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 2, NOW(), NOW()),
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc', 3, NOW(), NOW()),
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', 4, NOW(), NOW()),
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 5, NOW(), NOW());
+
+-- Product Attribute Values (5 rows)
+INSERT INTO product_attribute_values (product_id, attribute_value_id, created_at, updated_at)
+VALUES
+  ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 1, NOW(), NOW()),
+  ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 2, NOW(), NOW()),
+  ('cccccccc-cccc-cccc-cccc-cccccccccccc', 3, NOW(), NOW()),
+  ('dddddddd-dddd-dddd-dddd-dddddddddddd', 4, NOW(), NOW()),
+  ('eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 5, NOW(), NOW());
+
+-- Carts (5 rows)
+INSERT INTO carts (id, user_id, created_at, updated_at)
+VALUES
+  (1, '11111111-1111-1111-1111-111111111111', NOW(), NOW()),
+  (2, '22222222-2222-2222-2222-222222222222', NOW(), NOW()),
+  (3, '33333333-3333-3333-3333-333333333333', NOW(), NOW()),
+  (4, '44444444-4444-4444-4444-444444444444', NOW(), NOW()),
+  (5, '55555555-5555-5555-5555-555555555555', NOW(), NOW());
+
+-- Cart Items (5 rows)
+INSERT INTO cart_items (id, quantity, product_id, cart_id, created_at, updated_at)
+VALUES
+  (1, 1, 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 1, NOW(), NOW()),
+  (2, 2, 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 2, NOW(), NOW()),
+  (3, 3, 'cccccccc-cccc-cccc-cccc-cccccccccccc', 3, NOW(), NOW()),
+  (4, 4, 'dddddddd-dddd-dddd-dddd-dddddddddddd', 4, NOW(), NOW()),
+  (5, 5, 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 5, NOW(), NOW());
+
+-- Wishlist Items (5 rows)
+INSERT INTO wishlist_items (user_id, product_id, created_at, updated_at)
+VALUES
+  ('11111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NOW(), NOW()),
+  ('22222222-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', NOW(), NOW()),
+  ('33333333-3333-3333-3333-333333333333', 'cccccccc-cccc-cccc-cccc-cccccccccccc', NOW(), NOW()),
+  ('44444444-4444-4444-4444-444444444444', 'dddddddd-dddd-dddd-dddd-dddddddddddd', NOW(), NOW()),
+  ('55555555-5555-5555-5555-555555555555', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', NOW(), NOW());
+
+-- Delivery Addresses (5 rows)
+INSERT INTO delivery_addresses (id, address, user_id)
+VALUES
+  (1, 'Test Street 1', '11111111-1111-1111-1111-111111111111'),
+  (2, 'Test Street 2', '22222222-2222-2222-2222-222222222222'),
+  (3, 'Test Street 3', '33333333-3333-3333-3333-333333333333'),
+  (4, 'Test Street 4', '44444444-4444-4444-4444-444444444444'),
+  (5, 'Test Street 5', '55555555-5555-5555-5555-555555555555');
+
+-- Payment Methods (5 rows)
+INSERT INTO payment_methods (id, name)
+VALUES
+  (1, 'Card'),
+  (2, 'Cash'),
+  (3, 'Bank Transfer'),
+  (4, 'Apple Pay'),
+  (5, 'Google Pay');
+
+-- Delivery Methods (5 rows)
+INSERT INTO delivery_methods (id, name, price)
+VALUES
+  (1, 'Courier', 300.00),
+  (2, 'Pickup', 0.00),
+  (3, 'Express', 500.00),
+  (4, 'Post', 200.00),
+  (5, 'Drone', 1000.00);
+
+-- Orders (5 rows)
+INSERT INTO orders (
+  id,
+  number,
+  total_price,
+  status,
+  user_id,
+  address_id,
+  payment_method_id,
+  delivery_method_id,
+  created_at,
+  updated_at
+)
+VALUES
+  ('o1111111-1111-1111-1111-111111111111', 'ORD-1001', 1000.00, 'PENDING', '11111111-1111-1111-1111-111111111111', 1, 1, 1, NOW(), NOW()),
+  ('o2222222-2222-2222-2222-222222222222', 'ORD-1002', 1100.00, 'PENDING', '22222222-2222-2222-2222-222222222222', 2, 2, 2, NOW(), NOW()),
+  ('o3333333-3333-3333-3333-333333333333', 'ORD-1003', 1200.00, 'PENDING', '33333333-3333-3333-3333-333333333333', 3, 3, 3, NOW(), NOW()),
+  ('o4444444-4444-4444-4444-444444444444', 'ORD-1004', 1300.00, 'PENDING', '44444444-4444-4444-4444-444444444444', 4, 4, 4, NOW(), NOW()),
+  ('o5555555-5555-5555-5555-555555555555', 'ORD-1005', 1400.00, 'PENDING', '55555555-5555-5555-5555-555555555555', 5, 5, 5, NOW(), NOW());
+
+-- Order Items (5 rows)
+INSERT INTO order_items (id, order_id, product_id, quantity, price)
+VALUES
+  (1, 'o1111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 1, 100.00),
+  (2, 'o2222222-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 2, 110.00),
+  (3, 'o3333333-3333-3333-3333-333333333333', 'cccccccc-cccc-cccc-cccc-cccccccccccc', 3, 120.00),
+  (4, 'o4444444-4444-4444-4444-444444444444', 'dddddddd-dddd-dddd-dddd-dddddddddddd', 4, 130.00),
+  (5, 'o5555555-5555-5555-5555-555555555555', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', 5, 140.00);
+-- Comments (5 rows)
+INSERT INTO comments (id, mark, description, user_id, product_id, created_at, updated_at)
+VALUES
+  (1, 5, 'Excellent product!', '11111111-1111-1111-1111-111111111111', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', NOW(), NOW()),
+  (2, 4, 'Very good', '22222222-2222-2222-2222-222222222222', 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', NOW(), NOW()),
+  (3, 3, 'Average', '33333333-3333-3333-3333-333333333333', 'cccccccc-cccc-cccc-cccc-cccccccccccc', NOW(), NOW()),
+  (4, 2, 'Not great', '44444444-4444-4444-4444-444444444444', 'dddddddd-dddd-dddd-dddd-dddddddddddd', NOW(), NOW()),
+  (5, 1, 'Bad experience', '55555555-5555-5555-5555-555555555555', 'eeeeeeee-eeee-eeee-eeee-eeeeeeeeeeee', NOW(), NOW());
+
+-- Comment Images (5 rows)
+INSERT INTO comment_images (id, url, comment_id, created_at, updated_at)
+VALUES
+  (1, 'https://example.com/comment-1.jpg', 1, NOW(), NOW()),
+  (2, 'https://example.com/comment-2.jpg', 2, NOW(), NOW()),
+  (3, 'https://example.com/comment-3.jpg', 3, NOW(), NOW()),
+  (4, 'https://example.com/comment-4.jpg', 4, NOW(), NOW()),
+  (5, 'https://example.com/comment-5.jpg', 5, NOW(), NOW());
+
+COMMIT;
+
