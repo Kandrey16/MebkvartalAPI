@@ -9,9 +9,20 @@ import { CategoryAttributeGroupService } from './services/category_attribute_gro
 import { AttributeService } from './services/attribute.service';
 import { AttributeValueService } from './services/attribute_value.service';
 import { ProductAttributeValueService } from './services/product_attribute_value.service';
+import { AttributeGroupRepository } from './repository/attribute_group.repository';
+import { CategoryAttributeGroupRepository } from './repository/category_attribute_group.repository';
+import { AttributeRepository } from './repository/attribute.repository';
+import { AttributeValueRepository } from './repository/attribute_value.repository';
+import { ProductAttributeValueRepository } from './repository/product_attribute_value.repository';
 
 @Module({
   providers: [
+    AttributeGroupRepository,
+    CategoryAttributeGroupRepository,
+    AttributeRepository,
+    AttributeValueRepository,
+    ProductAttributeValueRepository,
+
     AttributeGroupResolver,
     CategoryAttributeGroupResolver,
     AttributeResolver,

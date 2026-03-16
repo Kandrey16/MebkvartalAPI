@@ -6,7 +6,7 @@ import { CreateUserType, UpdateUserType } from '../schema/user.schema';
 export class UserService {
   constructor(private readonly userRepository: UserRepository) {}
 
-  async signIn(data: CreateUserType) {
+  async create(data: CreateUserType) {
     return this.userRepository.create(data);
   }
 
@@ -20,6 +20,14 @@ export class UserService {
 
   async findByEmail(email: string) {
     return this.userRepository.findByEmail(email);
+  }
+
+  async findByActivationLink(activationLink: string) {
+    return this.userRepository.findByActivationLink(activationLink);
+  }
+
+  async activateByLink(activationLink: string) {
+    return this.userRepository.activateByLink(activationLink);
   }
 
   async update(id: string, data: UpdateUserType) {

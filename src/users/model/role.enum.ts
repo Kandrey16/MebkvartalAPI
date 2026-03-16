@@ -7,6 +7,6 @@ export enum Role {
 }
 
 registerEnumType(Role, {
-  name: 'Role',
+  name: 'Role', // имя должно совпадать с тем, что будет в GraphQL schema
   description: 'User role',
 });

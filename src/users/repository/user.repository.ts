@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUserType, UpdateUserType } from '../schema/user.schema';
@@ -23,15 +22,23 @@ export class UserRepository {
     });
   }
 
+  async findByActivationLink(activationLink: string) {
+    return this.prisma.user.findUnique({
+      where: { activationLink },
+    });
+  }
+
+  async activateByLink(activationLink: string) {
+    return this.prisma.user.update({
+      where: { activationLink },
+      data: { isActivated: true },
+    });
+  }
+
   async findByEmail(email: string) {
-    const user = await this.prisma.user.findUnique({
+    return await this.prisma.user.findUnique({
       where: { email },
     });
-
-    if (!user) {
-      throw new Error('User not found');
-    }
-    return user;
   }
 
   async update(id: string, data: UpdateUserType) {

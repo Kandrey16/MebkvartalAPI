@@ -12,18 +12,21 @@ export class User {
   @Field(() => String)
   password: string;
 
+  @Field(() => Boolean)
+  isActivated: boolean;
+
   @Field(() => Role)
   role: Role;
 
-  @Field(() => String)
-  name: string;
+  @Field(() => String, { nullable: true })
+  name?: string;
 
-  @Field(() => String)
-  surname: string;
+  @Field(() => String, { nullable: true })
+  surname?: string;
 
-  @Field(() => String)
-  imageUrl: string;
+  @Field(() => String, { nullable: true })
+  imageUrl?: string;
 
-  @Field(() => String)
-  phone: string;
+  @Field(() => String, { nullable: true })
+  phoneNumber?: string;
 }

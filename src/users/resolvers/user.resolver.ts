@@ -1,9 +1,8 @@
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 import { User } from '../model/user.model';
 import { UserService } from '../services/user.service';
-import { SignInInput } from '../../auth/dto/signIn.input';
 import { UpdateUserInput } from '../dto/update-user.input';
-import { UpdateUserSchema, UserSchema } from '../schema/user.schema';
+import { UpdateUserSchema } from '../schema/user.schema';
 
 @Resolver(() => User)
 export class UserResolver {
@@ -22,12 +21,6 @@ export class UserResolver {
   @Query(() => User, { name: 'currentUser', nullable: true })
   findByEmail(@Args('email') email: string) {
     return this.userService.findByEmail(email);
-  }
-
-  @Mutation(() => User)
-  signIn(@Args('input') input: SignInInput) {
-    const data = UserSchema.parse(input);
-    return this.userService.signIn(data);
   }
 
   @Mutation(() => User)

@@ -9,9 +9,20 @@ import { BrandService } from './services/brand.service';
 import { CollectionService } from './services/collection.service';
 import { ProductCollectionService } from './services/product_collection.service';
 import { ProductImageService } from './services/product_image.service';
+import { ProductRepository } from './repository/product.repository';
+import { BrandRepository } from './repository/brand.repository';
+import { CollectionRepository } from './repository/collection.repository';
+import { ProductCollectionRepository } from './repository/product_collection.repository';
+import { ProductImageRepository } from './repository/product_image.repository';
 
 @Module({
   providers: [
+    ProductRepository,
+    BrandRepository,
+    CollectionRepository,
+    ProductCollectionRepository,
+    ProductImageRepository,
+
     ProductsResolver,
     BrandResolver,
     CollectionResolver,

@@ -10,13 +10,13 @@ enum OrderStatus {
 }
 
 model Order {
-  id        String   @id @default(uuid())
-  number    String   @unique
+  id     String @id @default(uuid())
+  number String @unique
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
 
-  totalPrice Decimal     @db.Decimal(10, 2) @map("total_price")
+  totalPrice Decimal     @map("total_price") @db.Decimal(10, 2)
   status     OrderStatus @default(PENDING)
 
   userId           String @map("user_id")
