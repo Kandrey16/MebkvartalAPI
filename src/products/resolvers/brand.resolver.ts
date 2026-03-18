@@ -4,11 +4,13 @@ import { Brand } from '../model/brand.model';
 import { CreateBrandInput } from '../dto/brand/create-brand.input';
 import { BrandBaseSchema, UpdateBrandSchema } from '../schema/brand.schema';
 import { UpdateBrandInput } from '../dto/brand/update-brand.input';
+import { Roles } from 'src/auth/decopators/role.decorator';
 
 @Resolver(() => Brand)
 export class BrandResolver {
   constructor(private readonly brandService: BrandService) {}
 
+  @Roles('USER')
   @Query(() => [Brand], { name: 'brands' })
   findAll() {
     return this.brandService.findAll();

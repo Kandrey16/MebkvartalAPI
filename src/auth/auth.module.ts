@@ -2,12 +2,13 @@ import { Module } from '@nestjs/common';
 import { AuthService } from './services/auth.service';
 import { TokenService } from './services/token.service';
 import { JwtModule } from '@nestjs/jwt';
-import { AuthResolver } from './resolvers/auth.resolver';
 import { TokenRepository } from './repository/token.repository';
 import { UsersModule } from 'src/users/users.module';
 import { AuthController } from './controllers/auth.controller';
-import { MailModule } from 'src/mail/mail.module'
-import { MailService } from 'src/mail/mail.service'
+import { MailModule } from 'src/mail/mail.module';
+import { MailService } from 'src/mail/mail.service';
+import { APP_GUARD } from '@nestjs/core';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
 
 @Module({
   imports: [
@@ -19,11 +20,14 @@ import { MailService } from 'src/mail/mail.service'
     MailModule,
   ],
   providers: [
-    AuthResolver,
     AuthService,
     TokenService,
     MailService,
     TokenRepository,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
   controllers: [AuthController],
   exports: [JwtModule, TokenService],
