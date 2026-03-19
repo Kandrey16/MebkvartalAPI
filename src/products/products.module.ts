@@ -14,8 +14,10 @@ import { BrandRepository } from './repository/brand.repository';
 import { CollectionRepository } from './repository/collection.repository';
 import { ProductCollectionRepository } from './repository/product_collection.repository';
 import { ProductImageRepository } from './repository/product_image.repository';
+import { AttributesModule } from 'src/attributes/attributes.module';
 
 @Module({
+  imports: [AttributesModule],
   providers: [
     ProductRepository,
     BrandRepository,

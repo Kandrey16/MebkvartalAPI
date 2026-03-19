@@ -13,13 +13,31 @@ export class ProductRepository {
     });
   }
 
-  async findAll() {
-    return this.prisma.product.findMany();
+  async findAll(filter?: string[]) {
+    return this.prisma.product.findMany({
+      where: { id: filter ? { in: filter } : undefined },
+    });
   }
 
   async findOne(id: string) {
     return this.prisma.product.findUnique({
       where: { id },
+    });
+  }
+
+  async findByFilter(filter: string[]) {
+    return this.prisma.product.findMany({
+      where: { id: { in: filter } },
+      select: { id: true },
+      orderBy: { id: 'asc' },
+      take: 20,
+    });
+  }
+
+  async findByCategoryId(categoryId: number) {
+    return this.prisma.product.findMany({
+      where: { categoryId },
+      select: { id: true },
     });
   }
 

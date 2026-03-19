@@ -14,6 +14,9 @@ import { CategoryAttributeGroupRepository } from './repository/category_attribut
 import { AttributeRepository } from './repository/attribute.repository';
 import { AttributeValueRepository } from './repository/attribute_value.repository';
 import { ProductAttributeValueRepository } from './repository/product_attribute_value.repository';
+import { CategoryRepository } from './repository/category.repository';
+import { CategoryResolver } from './resolvers/category.resolver';
+import { CategoryService } from './services/category.service';
 
 @Module({
   providers: [
@@ -22,18 +25,29 @@ import { ProductAttributeValueRepository } from './repository/product_attribute_
     AttributeRepository,
     AttributeValueRepository,
     ProductAttributeValueRepository,
+    CategoryRepository,
 
     AttributeGroupResolver,
     CategoryAttributeGroupResolver,
     AttributeResolver,
     AttributeValueResolver,
     ProductAttributeValueResolver,
+    CategoryResolver,
 
     AttributeGroupService,
     CategoryAttributeGroupService,
     AttributeService,
     AttributeValueService,
     ProductAttributeValueService,
+    CategoryService,
+  ],
+  exports: [
+    AttributeGroupService,
+    CategoryAttributeGroupService,
+    AttributeService,
+    AttributeValueService,
+    ProductAttributeValueService,
+    CategoryService,
   ],
 })
 export class AttributesModule {}

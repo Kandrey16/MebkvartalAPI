@@ -15,7 +15,7 @@ export class Product {
   price: number;
 
   @Field({ nullable: true })
-  description: string;
+  description?: string;
 
   @Field(() => Int)
   availableQuantity: number;
@@ -28,4 +28,28 @@ export class Product {
 
   @Field(() => Int)
   categoryId: number;
+}
+
+@ObjectType()
+export class Facet {
+  @Field(() => Int)
+  id: number;
+
+  @Field(() => String)
+  name: string;
+
+  @Field(() => String)
+  value: string;
+
+  @Field(() => Int)
+  count: number;
+}
+
+@ObjectType()
+export class FacetProduct {
+  @Field(() => [Product])
+  items: Product[];
+
+  @Field(() => [Facet])
+  facets: Facet[];
 }

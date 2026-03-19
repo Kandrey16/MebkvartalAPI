@@ -2,21 +2,29 @@ import { Resolver, Query, Mutation, Args, ID } from '@nestjs/graphql';
 import { ProductsService } from '../services/products.service';
 import { CreateProductInput } from '../dto/product/create-product.input';
 import { UpdateProductInput } from '../dto/product/update-product.input';
-import { Product } from '../model/product.model';
+import { FacetProduct, Product } from '../model/product.model';
 import {
   ProductBaseSchema,
   UpdateProductSchema,
 } from '../schema/product.schema';
+import { Public } from 'src/auth/decopators/public.decorator';
+import { ProductFilterInput } from '../dto/product/filter.input';
 
 @Resolver(() => Product)
 export class ProductsResolver {
   constructor(private readonly productsService: ProductsService) {}
 
-  @Query(() => [Product], { name: 'products' })
-  findAll() {
-    return this.productsService.findAll();
+  @Public()
+  @Query(() => FacetProduct, { name: 'products' })
+  findAll(
+    @Args('category', { type: () => String, nullable: true })
+    categorySlug?: string,
+    @Args('filters', { nullable: true }) filter?: ProductFilterInput,
+  ) {
+    return this.productsService.findAll(categorySlug, filter?.slugs);
   }
 
+  @Public()
   @Query(() => Product, { name: 'product', nullable: true })
   findOne(@Args('id', { type: () => ID }) id: string) {
     return this.productsService.findOne(id);

@@ -15,8 +15,10 @@ export class ProductImageRepository {
     });
   }
 
-  async findAll() {
-    return this.prisma.productImage.findMany();
+  async findAll(filter?: string[]) {
+    return this.prisma.productImage.findMany({
+      where: { productId: filter ? { in: filter } : undefined, isMain: true },
+    });
   }
 
   async findOne(id: string) {
