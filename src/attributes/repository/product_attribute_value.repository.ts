@@ -15,7 +15,6 @@ export class ProductAttributeValueRepository {
   async findAll() {
     return this.prisma.productAttributeValue.findMany();
   }
-  //TODO: getType
 
   async findOne(productId: string, attributeValueId: number) {
     return this.prisma.productAttributeValue.findUnique({
@@ -24,7 +23,6 @@ export class ProductAttributeValueRepository {
       },
     });
   }
-  //TODO: deleteType
 
   async remove(productId: string, attributeValueId: number) {
     return this.prisma.productAttributeValue.delete({

@@ -1,4 +1,5 @@
 import { Field, Int, ObjectType } from '@nestjs/graphql';
+import { Attribute } from './attribute.model';
 
 @ObjectType()
 export class AttributeGroup {
@@ -7,4 +8,7 @@ export class AttributeGroup {
 
   @Field(() => String)
   name: string;
+
+  @Field(() => [Attribute])
+  attributes: Attribute[];
 }

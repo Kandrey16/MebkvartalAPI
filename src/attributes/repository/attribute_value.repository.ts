@@ -26,9 +26,9 @@ export class AttributeValueRepository {
     });
   }
 
-  async findBuSlug(slugs: string[]) {
+  async findBuSlug(filters: string[]) {
     return this.prisma.attributeValue.findMany({
-      where: { slug: { in: slugs } },
+      where: { slug: { in: filters } },
       select: {
         id: true,
         slug: true,

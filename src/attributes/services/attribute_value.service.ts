@@ -23,12 +23,12 @@ export class AttributeValueService {
     return this.attributeValueRepository.findOne(id);
   }
 
-  async findBySlug(slugs: string[]) {
-    const values = await this.attributeValueRepository.findBuSlug(slugs);
+  async findBySlug(filters: string[]) {
+    const values = await this.attributeValueRepository.findBuSlug(filters);
 
     if (!values.length) {
       throw new NotFoundException(
-        `No attribute values found for slugs: ${slugs.join(', ')}`,
+        `No attribute values found for filters: ${filters.join(', ')}`,
       );
     }
 

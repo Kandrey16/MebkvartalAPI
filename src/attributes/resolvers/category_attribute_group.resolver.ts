@@ -7,6 +7,7 @@ import {
   CategoryAttributeGroupBaseSchema,
   DeleteCategoryAttributeGroupSchema,
 } from '../schema/category_attribute_group.schema';
+import { Public } from 'src/auth/decopators/public.decorator';
 
 @Resolver(() => CategoryAttributeGroup)
 export class CategoryAttributeGroupResolver {
@@ -14,9 +15,13 @@ export class CategoryAttributeGroupResolver {
     private readonly categoryAttributeGroupService: CategoryAttributeGroupService,
   ) {}
 
+  @Public()
   @Query(() => [CategoryAttributeGroup], { name: 'categoryAttributeGroups' })
-  findAll() {
-    return this.categoryAttributeGroupService.findAll();
+  findAll(
+    @Args('category', { type: () => Int, nullable: true })
+    categoryId: number,
+  ) {
+    return this.categoryAttributeGroupService.findAll(categoryId);
   }
 
   @Query(() => CategoryAttributeGroup, {

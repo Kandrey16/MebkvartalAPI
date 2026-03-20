@@ -21,7 +21,7 @@ export class ProductsResolver {
     categorySlug?: string,
     @Args('filters', { nullable: true }) filter?: ProductFilterInput,
   ) {
-    return this.productsService.findAll(categorySlug, filter?.slugs);
+    return this.productsService.findAll(categorySlug, filter?.filters);
   }
 
   @Public()

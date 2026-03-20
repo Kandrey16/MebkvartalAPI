@@ -36,8 +36,14 @@ export class Facet {
   id: number;
 
   @Field(() => String)
-  name: string;
+  attribute: string;
 
+  @Field(() => [Value])
+  values: Value[];
+}
+
+@ObjectType()
+export class Value {
   @Field(() => String)
   value: string;
 

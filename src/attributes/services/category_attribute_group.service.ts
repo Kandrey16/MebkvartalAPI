@@ -12,8 +12,8 @@ export class CategoryAttributeGroupService {
     return this.categoryAttributeGroupRepository.create(data);
   }
 
-  async findAll() {
-    return this.categoryAttributeGroupRepository.findAll();
+  async findAll(categoryId?: number) {
+    return this.categoryAttributeGroupRepository.findAll(categoryId);
   }
 
   async findOne(categoryId: number, attributeGroupId: number) {

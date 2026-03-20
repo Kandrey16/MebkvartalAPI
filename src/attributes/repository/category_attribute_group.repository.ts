@@ -12,18 +12,57 @@ export class CategoryAttributeGroupRepository {
     });
   }
 
-  async findAll() {
-    return this.prisma.categoryAttributeGroup.findMany();
+  async findAll(categoryId?: number) {
+    const where = categoryId ? { categoryId } : undefined;
+    const rows = await this.prisma.categoryAttributeGroup.findMany({
+      where,
+      include: {
+        category: true,
+        attribute_group: {
+          include: {
+            attributes: {
+              include: {
+                values: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    // Prisma отдаёт relation-сущность как `attribute_group`, а GraphQL модель ждёт `attributeGroup`.
+    return rows.map((row) => ({
+      ...row,
+      attributeGroup: row.attribute_group,
+    }));
   }
-  //TODO: getType
+
   async findOne(categoryId: number, attributeGroupId: number) {
-    return this.prisma.categoryAttributeGroup.findUnique({
+    const row = await this.prisma.categoryAttributeGroup.findUnique({
       where: {
         categoryId_attributeGroupId: { categoryId, attributeGroupId },
       },
+      include: {
+        category: true,
+        attribute_group: {
+          include: {
+            attributes: {
+              include: {
+                values: true,
+              },
+            },
+          },
+        },
+      },
     });
+
+    if (!row) return null;
+
+    return {
+      ...row,
+      attributeGroup: row.attribute_group,
+    };
   }
-  //TODO: deleteType
 
   async remove(categoryId: number, attributeGroupId: number) {
     return this.prisma.categoryAttributeGroup.delete({

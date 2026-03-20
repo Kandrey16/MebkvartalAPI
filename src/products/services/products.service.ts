@@ -18,6 +18,7 @@ export class ProductsService {
 
   async findAll(categorySlug?: string, filter?: string[]) {
     let scopedProductIds: string[] | undefined;
+    console.log('filter', filter);
 
     if (categorySlug) {
       // 1) Ограничиваем выдачу по категории
@@ -56,18 +57,30 @@ export class ProductsService {
         this.attributeValueService.findProductFacets(finalProductIds),
       ]);
 
+      type FacetValue = { value: string; count: number };
+      type FacetDto = { id: number; attribute: string; values: FacetValue[] };
+
+      const facetByAttributeId = new Map<number, FacetDto>();
+
+      for (const row of facetsCount) {
+        const existing = facetByAttributeId.get(row.id);
+        if (!existing) {
+          facetByAttributeId.set(row.id, {
+            id: row.id,
+            attribute: row.name,
+            values: [],
+          });
+        }
+
+        facetByAttributeId.get(row.id)!.values.push({
+          value: row.value,
+          count: Number(row.count),
+        });
+      }
+
       return {
         items: result,
-
-        facets: facetsCount.map((facet) => ({
-          id: facet.id,
-
-          name: facet.name,
-
-          value: facet.value,
-
-          count: Number(facet.count),
-        })),
+        facets: Array.from(facetByAttributeId.values()),
       };
     }
 
@@ -75,7 +88,6 @@ export class ProductsService {
 
     return {
       items,
-
       facets: [],
     };
   }
