@@ -21,6 +21,7 @@ model Category {
 model AttributeGroup {
   id         Int         @id @default(autoincrement())
   name       String      @unique
+  slug       String      @unique
   attributes Attribute[]
 
   createdAt DateTime @default(now()) @map("created_at")
@@ -47,7 +48,8 @@ model CategoryAttributeGroup {
 
 model Attribute {
   id   Int    @id @default(autoincrement())
-  name String
+  name String @unique
+  slug String @unique
 
   attributeGroupId Int @map("attribute_group_id")
 

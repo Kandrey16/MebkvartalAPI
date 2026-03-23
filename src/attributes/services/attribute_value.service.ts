@@ -4,6 +4,7 @@ import {
   UpdateAttributeValueType,
 } from '../schema/attribute_value.schema';
 import { AttributeValueRepository } from '../repository/attribute_value.repository';
+import { ParsedFilters } from 'src/utils/parseFilters';
 
 @Injectable()
 export class AttributeValueService {
@@ -35,29 +36,22 @@ export class AttributeValueService {
     return values.map((value) => value.id);
   }
 
-  async filterByProductId(values: number[]) {
+  async filterByProductId(values: ParsedFilters) {
     const result =
       await this.attributeValueRepository.filterByProductId(values);
 
     if (!result.length) {
       throw new NotFoundException(
-        `No products found with attribute values: ${values.join(', ')}`,
-      );
-    }
-
-    return result.map((item) => item.product_id);
-  }
-
-  async findProductFacets(values: string[]) {
-    const result =
-      await this.attributeValueRepository.findProductFacets(values);
-    if (!result.length) {
-      throw new NotFoundException(
-        `No facets found for products with attribute values: ${values.join(', ')}`,
+        `No products found for attribute values: ${JSON.stringify(values)}`,
       );
     }
 
     return result;
+  }
+
+  async findProductFacets(category: string) {
+    if (!category) throw new NotFoundException('Category is required');
+    return this.attributeValueRepository.findFacets(category);
   }
 
   async update(id: number, data: UpdateAttributeValueType) {

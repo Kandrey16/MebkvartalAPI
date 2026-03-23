@@ -1,0 +1,98 @@
+
+
+
+SELECT pav.product_id, ag.name, a.name, av.value
+FROM product_attribute_values pav
+JOIN attribute_values av ON av.id = pav.attribute_value_id
+JOIN attributes a ON a.id = av.attribute_id
+JOIN attribute_groups ag ON ag.id = a.attribute_group_id
+WHERE a.slug = 'color' AND av.slug IN ('gray')
+GROUP BY pav.product_id, ag.name, a.name, av.value
+HAVING COUNT(DISTINCT a.name) = 1;
+
+
+Проблема 
+1.       
+const categoryId = await this.categoryService.findIdBySlug(categorySlug);
+мы получаем id товаров для категории. проще сразу дописать inner join category, и сделать 1 запрос
+
+
+
+
+async findAll(categorySlug?: string, filter?: string[]) {
+    // let scopedProductIds: string[] | undefined;
+    console.log('111', scopedProductIds);
+
+    if (categorySlug) {
+      // 1) Ограничиваем выдачу по категории
+      const categoryId = await this.categoryService.findIdBySlug(categorySlug);
+      console.log('category', categoryId);
+
+      const res = await this.productRepository.findByCategoryId(categoryId);
+      scopedProductIds = res.map((item) => item.id);
+
+      if (!scopedProductIds.length) {
+        return { items: [], facets: [] };
+      }
+    }
+
+    if (filter?.length) {
+      const filters = parseFilters(filter);
+      // 2) Один запрос на получение id значений атрибутов
+      const productsByAttributes =
+        await this.attributeValueService.filterByProductId(filters);
+
+      if (!productsByAttributes.length) {
+        return { items: [], facets: [] };
+      }
+
+      // 3) Если есть категория, берём пересечение множеств
+      const scopedSet = scopedProductIds ? new Set(scopedProductIds) : null;
+
+      const finalProductIds = scopedSet
+        ? productsByAttributes.filter((id) => scopedSet.has(id))
+        : productsByAttributes;
+
+      if (!finalProductIds.length) {
+        return { items: [], facets: [] };
+      }
+
+      const [result, facetsCount] = await Promise.all([
+        this.productRepository.findAll(finalProductIds),
+        this.attributeValueService.findProductFacets(finalProductIds),
+      ]);
+
+      type FacetValue = { value: string; count: number };
+      type FacetDto = { id: number; attribute: string; values: FacetValue[] };
+
+      const facetByAttributeId = new Map<number, FacetDto>();
+
+      for (const row of facetsCount) {
+        const existing = facetByAttributeId.get(row.id);
+        if (!existing) {
+          facetByAttributeId.set(row.id, {
+            id: row.id,
+            attribute: row.name,
+            values: [],
+          });
+        }
+
+        facetByAttributeId.get(row.id)!.values.push({
+          value: row.value,
+          count: Number(row.count),
+        });
+      }
+
+      return {
+        items: result,
+        facets: Array.from(facetByAttributeId.values()),
+      };
+    }
+
+    const items = await this.productRepository.findAll(scopedProductIds);
+
+    return {
+      items,
+      facets: [],
+    };
+  }

@@ -5,6 +5,7 @@ import {
   CreateAttributeValueType,
   UpdateAttributeValueType,
 } from '../schema/attribute_value.schema';
+import { ParsedFilters } from 'src/utils/parseFilters';
 
 @Injectable()
 export class AttributeValueRepository {
@@ -36,14 +37,28 @@ export class AttributeValueRepository {
     });
   }
 
-  async filterByProductId(values: number[]) {
-    return this.prisma.$queryRaw<Array<{ product_id: string }>>`
-      SELECT product_id
-      FROM product_attribute_values
-      WHERE attribute_value_id IN (${values.join(',')})
-      GROUP BY product_id
-      HAVING COUNT(DISTINCT attribute_value_id) = ${values.length}
+  async filterByProductId(values: ParsedFilters): Promise<string[]> {
+    const filterCount = Object.keys(values).length;
+
+    const conditions = Object.entries(values).map(
+      ([attr, values]) =>
+        Prisma.sql`(a.slug = ${attr} AND av.slug IN (${Prisma.join(values)}))`,
+    );
+
+    const whereCause = Prisma.join(conditions, ' OR ');
+    const query = await this.prisma.$queryRaw<{ product_id: string }[]>`
+      SELECT pav.product_id
+      FROM product_attribute_values pav
+      JOIN attribute_values av ON av.id = pav.attribute_value_id
+      JOIN attributes a ON a.id = av.attribute_id
+      JOIN attribute_groups ag ON ag.id = a.attribute_group_id
+      WHERE ${whereCause}
+      GROUP BY pav.product_id
+      HAVING COUNT(DISTINCT a.name) = ${filterCount}  
     `;
+
+    const result = query.map((row) => row.product_id);
+    return result;
   }
 
   async facetsCount(values: string[]) {
@@ -57,6 +72,31 @@ export class AttributeValueRepository {
         ON av.id = pav.attribute_value_id
       WHERE pav.product_id IN (${values.join(',')})
       GROUP BY av.attribute_id, av.id
+    `;
+  }
+
+  async findFacets(categorySlug: string): Promise<
+    Array<{
+      id: number | string;
+      name: string;
+      value: string;
+      count: string | number;
+    }>
+  > {
+    return this.prisma.$queryRaw`
+      SELECT
+      a.id,
+      a.name,
+      av.value,
+      COUNT(*) as count
+      FROM Attributes a
+      JOIN Attribute_values av ON a.id = av.attribute_id
+      JOIN product_attribute_values pav ON av.id = pav.attribute_value_id
+      JOIN Products p ON p.id = pav.product_id
+      JOIN Categories c ON c.id = p.category_id
+      WHERE c.slug = ${categorySlug}
+      GROUP BY a.id, a.name, av.value
+      ORDER BY a.id
     `;
   }
 

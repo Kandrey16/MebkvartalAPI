@@ -4,6 +4,7 @@ import {
   CreateAttributeGroupType,
   UpdateAttributeGroupType,
 } from '../schema/attribute_group.schema';
+import { convertToSlug } from 'src/utils/convertToSlug';
 
 @Injectable()
 export class AttributeGroupRepository {
@@ -11,7 +12,10 @@ export class AttributeGroupRepository {
 
   async create(data: CreateAttributeGroupType) {
     return this.prisma.attributeGroup.create({
-      data,
+      data: {
+        ...data,
+        slug: convertToSlug(data.name),
+      },
     });
   }
 
@@ -28,7 +32,12 @@ export class AttributeGroupRepository {
   async update(id: number, data: UpdateAttributeGroupType) {
     return this.prisma.attributeGroup.update({
       where: { id },
-      data,
+      data: data.name
+        ? {
+            ...data,
+            slug: convertToSlug(data.name),
+          }
+        : data,
     });
   }
 

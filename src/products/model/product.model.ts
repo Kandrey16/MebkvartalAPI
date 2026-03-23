@@ -58,4 +58,7 @@ export class FacetProduct {
 
   @Field(() => [Facet])
   facets: Facet[];
+
+  @Field(() => Int)
+  total: number;
 }
