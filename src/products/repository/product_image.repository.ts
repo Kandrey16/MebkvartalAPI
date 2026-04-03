@@ -21,6 +21,16 @@ export class ProductImageRepository {
     });
   }
 
+  async findByProductIds(productIds: string[]) {
+    if (!productIds.length) {
+      return [];
+    }
+    return this.prisma.productImage.findMany({
+      where: { productId: { in: productIds } },
+      orderBy: [{ productId: 'asc' }, { position: 'asc' }],
+    });
+  }
+
   async findOne(id: string) {
     return this.prisma.productImage.findUnique({
       where: { id },

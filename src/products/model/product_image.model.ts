@@ -2,8 +2,8 @@ import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
 
 @ObjectType()
 export class ProductImage {
-  @Field(() => Int)
-  id: number;
+  @Field(() => ID)
+  id: string;
 
   @Field(() => String)
   url: string;
@@ -12,8 +12,8 @@ export class ProductImage {
   position: number;
 
   @Field(() => Boolean)
-  is_main: boolean;
+  isMain: boolean;
 
   @Field(() => ID)
-  product_id: string;
+  productId: string;
 }

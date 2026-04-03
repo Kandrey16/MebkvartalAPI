@@ -49,8 +49,7 @@ export class AttributeValueService {
     return result;
   }
 
-  async findProductFacets(category: string) {
-    if (!category) throw new NotFoundException('Category is required');
+  async findProductFacets(category?: string) {
     return this.attributeValueRepository.findFacets(category);
   }
 

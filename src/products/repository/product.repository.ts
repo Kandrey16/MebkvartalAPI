@@ -4,6 +4,7 @@ import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateProductInput } from '../dto/product/update-product.input';
 import { parseFilters } from 'src/utils/parseFilters';
 import { Prisma } from '@prisma/client';
+import { Product } from '../model/product.model';
 
 @Injectable()
 export class ProductRepository {
@@ -17,8 +18,11 @@ export class ProductRepository {
 
   async findProductsWithParams(categorySlug?: string, filter?: string[]) {
     const parsedFilters = filter?.length ? parseFilters(filter) : {};
+    let where = Prisma.empty;
 
-    if (!categorySlug) throw new Error('categorySlug required');
+    if (categorySlug) {
+      where = Prisma.sql`WHERE c.slug = ${categorySlug}`;
+    }
 
     const conditions = Object.entries(parsedFilters).map(
       ([slug, values]) =>
@@ -27,13 +31,21 @@ export class ProductRepository {
 
     return this.prisma.$queryRaw`
       SELECT DISTINCT
-      p.id, p.name, p.slug, p.price, p.description
+        p.id,
+        p.name,
+        p.slug,
+        p.price,
+        p.description,
+        p.available_quantity AS "availableQuantity",
+        p.is_active AS "isActive",
+        p.brand_id AS "brandId",
+        p.category_id AS "categoryId"
       FROM PRODUCTS p
       JOIN categories c ON c.id = p.category_id
       JOIN product_attribute_values pav ON p.id = pav.product_id
       JOIN attribute_values av ON av.id = pav.attribute_value_id
       JOIN attributes a ON a.id = av.attribute_id
-      WHERE c.slug = ${categorySlug}
+      ${where}
       ${conditions.length > 0 ? Prisma.sql`AND (${Prisma.join(conditions, ' OR ')})` : Prisma.empty}
     `;
   }
@@ -43,8 +55,11 @@ export class ProductRepository {
     filter?: string[],
   ): Promise<{ count: number }> {
     const parsedFilters = filter?.length ? parseFilters(filter) : {};
+    let where = Prisma.empty;
 
-    if (!categorySlug) throw new Error('categorySlug required');
+    if (categorySlug) {
+      where = Prisma.sql`WHERE c.slug = ${categorySlug}`;
+    }
 
     const conditions = Object.entries(parsedFilters).map(
       ([slug, values]) =>
@@ -58,15 +73,20 @@ export class ProductRepository {
       JOIN product_attribute_values pav ON p.id = pav.product_id
       JOIN attribute_values av ON av.id = pav.attribute_value_id
       JOIN attributes a ON a.id = av.attribute_id
-      WHERE c.slug = ${categorySlug}
+      ${where}
       ${conditions.length > 0 ? Prisma.sql`AND (${Prisma.join(conditions, ' OR ')})` : Prisma.empty}
     `;
   }
 
-  async findOne(id: string) {
-    return this.prisma.product.findUnique({
-      where: { id },
-    });
+  async findOneBySlug(slug: string) {
+    const query = await this.prisma.$queryRaw<Array<{ product: Product }>>`
+      Select product from product_full_json 
+      WHERE slug = ${slug}
+    `;
+    const result = query.map((r) => r.product);
+    console.log(result[0].attributes);
+
+    return result[0];
   }
 
   async findByFilter(filter: string[]) {
@@ -95,6 +115,9 @@ export class ProductRepository {
   async remove(id: string) {
     return this.prisma.product.delete({
       where: { id },
+      include: {
+        productImages: { orderBy: { position: 'asc' } },
+      },
     });
   }
 }

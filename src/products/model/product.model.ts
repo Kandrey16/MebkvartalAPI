@@ -1,4 +1,6 @@
 import { Field, ID, Int, ObjectType } from '@nestjs/graphql';
+import { ProductImage } from './product_image.model';
+import { Attribute } from 'src/attributes/model/attribute.model';
 
 @ObjectType()
 export class Product {
@@ -28,6 +30,12 @@ export class Product {
 
   @Field(() => Int)
   categoryId: number;
+
+  @Field(() => [ProductImage])
+  productImages: ProductImage[];
+
+  @Field(() => [Attribute], { nullable: true })
+  attributes?: Attribute[];
 }
 
 @ObjectType()

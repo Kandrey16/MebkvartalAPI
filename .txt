@@ -96,3 +96,112 @@ async findAll(categorySlug?: string, filter?: string[]) {
       facets: [],
     };
   }
+
+
+
+INSERT INTO public.products(
+  id, name, slug, price, description, available_quantity, is_active, brand_id, category_id, created_at, updated_at
+)
+VALUES
+(gen_random_uuid(), 'Стул Capella серый', 'stul-capella-seryy', 4999, 'Мягкий стул с металлическими ножками', 25, true, 1, 4, NOW(), NOW()),
+(gen_random_uuid(), 'Стул Loft черный', 'stul-loft-chernyy', 3990, 'Стул в стиле лофт', 40, true, 1, 4, NOW(), NOW()),
+(gen_random_uuid(), 'Кресло Oslo', 'kreslo-oslo', 12990, 'Удобное кресло для гостиной', 12, true, 2, 4, NOW(), NOW()),
+(gen_random_uuid(), 'Диван угловой Milan', 'divan-uglovoy-milan', 45990, 'Большой угловой диван', 5, true, 3, 2, NOW(), NOW()),
+(gen_random_uuid(), 'Диван прямой Oslo', 'divan-pryamoy-oslo', 32990, 'Прямой диван для гостиной', 7, true, 3, 2, NOW(), NOW()),
+(gen_random_uuid(), 'Стол обеденный Loft', 'stol-obedennyy-loft', 15990, 'Обеденный стол из массива', 10, true, 4, 5, NOW(), NOW()),
+(gen_random_uuid(), 'Стол журнальный Round', 'stol-zhurnalnyy-round', 5990, 'Журнальный столик круглый', 18, true, 4, 5, NOW(), NOW()),
+(gen_random_uuid(), 'Шкаф распашной Line', 'shkaf-raspashnoy-line', 25990, 'Шкаф для одежды', 6, true, 5, 6, NOW(), NOW()),
+(gen_random_uuid(), 'Комод Loft', 'komod-loft', 11990, 'Комод с ящиками', 14, true, 5, 6, NOW(), NOW()),
+(gen_random_uuid(), 'Тумба под ТВ Space', 'tumba-tv-space', 9990, 'Тумба под телевизор', 9, true, 5, 6, NOW(), NOW()),
+
+(gen_random_uuid(), 'Кровать двуспальная Dream', 'krovat-dream', 28990, 'Кровать 160x200', 8, true, 4, 3, NOW(), NOW()),
+(gen_random_uuid(), 'Матрас Comfort', 'matras-comfort', 15990, 'Ортопедический матрас', 20, true, 4, 3, NOW(), NOW()),
+(gen_random_uuid(), 'Стул Velvet зеленый', 'stul-velvet-zelenyy', 5490, 'Стул велюр', 22, true, 1, 4, NOW(), NOW()),
+(gen_random_uuid(), 'Стол письменный Office', 'stol-pismennyy-office', 12990, 'Стол для работы', 13, true, 4, 5, NOW(), NOW()),
+(gen_random_uuid(), 'Полка настенная Loft', 'polka-nastennaya-loft', 2990, 'Настенная полка', 35, true, 5, 6, NOW(), NOW()),
+(gen_random_uuid(), 'Стеллаж Line', 'stellazh-line', 8990, 'Стеллаж для хранения', 16, true, 5, 6, NOW(), NOW()),
+(gen_random_uuid(), 'Кресло компьютерное Ergo', 'kreslo-ergo', 14990, 'Компьютерное кресло', 11, true, 2, 4, NOW(), NOW()),
+(gen_random_uuid(), 'Пуф мягкий Oslo', 'puf-oslo', 3990, 'Мягкий пуф', 27, true, 2, 4, NOW(), NOW()),
+(gen_random_uuid(), 'Стол кухонный Compact', 'stol-kuhonnyy-compact', 8990, 'Компактный кухонный стол', 19, true, 4, 5, NOW(), NOW()),
+(gen_random_uuid(), 'Стул кухонный Basic', 'stul-kuhonnyy-basic', 2490, 'Простой кухонный стул', 50, true, 1, 4, NOW(), NOW()),
+
+(gen_random_uuid(), 'Диван угловой Soft', 'divan-soft', 55990, 'Мягкий угловой диван', 4, true, 3, 2, NOW(), NOW()),
+(gen_random_uuid(), 'Кровать односпальная Kids', 'krovat-kids', 14990, 'Кровать для ребенка', 10, true, 5, 3, NOW(), NOW()),
+(gen_random_uuid(), 'Шкаф купе Mirror', 'shkaf-kupe-mirror', 35990, 'Шкаф купе с зеркалом', 5, true, 5, 6, NOW(), NOW()),
+(gen_random_uuid(), 'Комод Classic', 'komod-classic', 13990, 'Классический комод', 12, true, 5, 6, NOW(), NOW()),
+(gen_random_uuid(), 'Стол журнальный Glass', 'stol-glass', 7990, 'Стеклянный столик', 14, true, 4, 5, NOW(), NOW()),
+(gen_random_uuid(), 'Кресло Relax', 'kreslo-relax', 18990, 'Кресло для отдыха', 6, true, 2, 4, NOW(), NOW()),
+(gen_random_uuid(), 'Стул Bar высокий', 'stul-bar-vysokiy', 5990, 'Барный стул', 21, true, 1, 4, NOW(), NOW()),
+(gen_random_uuid(), 'Стол барный Loft', 'stol-barnyy-loft', 11990, 'Барный стол', 9, true, 4, 5, NOW(), NOW()),
+(gen_random_uuid(), 'Тумба прикроватная Dream', 'tumba-prikrovatnaya-dream', 4990, 'Тумба прикроватная', 18, true, 5, 6, NOW(), NOW()),
+(gen_random_uuid(), 'Зеркало настенное Round', 'zerkalo-round', 6990, 'Круглое настенное зеркало', 15, true, 5, 7, NOW(), NOW());
+
+
+INSERT INTO attribute_groups (id, name, slug, created_at, updated_at) VALUES
+(1, 'Основные характеристики', 'osnovnye', NOW(), NOW()),
+(2, 'Материалы', 'materialy', NOW(), NOW()),
+(3, 'Размеры', 'razmery', NOW(), NOW()),
+(4, 'Дополнительно', 'dopolnitelno', NOW(), NOW());
+
+INSERT INTO attributes (name, slug, attribute_group_id, created_at, updated_at) VALUES
+('Ширина', 'width', 3, NOW(), NOW()),
+('Высота', 'height', 3, NOW(), NOW()),
+('Глубина', 'depth', 3, NOW(), NOW()),
+('Стиль', 'style', 4, NOW(), NOW());
+
+INSERT INTO attribute_values (value, slug, attribute_id, created_at, updated_at) VALUES
+-- Цвет
+('Черный', 'black', 2, NOW(), NOW()),
+('Белый', 'white', 2, NOW(), NOW()),
+('Зеленый', 'green', 2, NOW(), NOW()),
+-- Материал
+('Дерево', 'wood', 3, NOW(), NOW()),
+('Металл', 'metal', 3, NOW(), NOW()),
+('Ткань', 'fabric', 4, NOW(), NOW()),
+('МДФ', 'mdf', 4, NOW(), NOW()),
+('Стекло', 'glass', 4, NOW(), NOW()),
+-- Стиль
+('Лофт', 'loft', 9, NOW(), NOW()),
+('Современный', 'modern', 9, NOW(), NOW()),
+('Классический', 'classic', 9, NOW(), NOW());
+
+INSERT INTO category_attribute_groups (category_id, attribute_group_id, created_at, updated_at) VALUES
+(2, 1, NOW(), NOW()),
+(2, 2, NOW(), NOW()),
+(2, 4, NOW(), NOW()),
+(3, 1, NOW(), NOW()),
+(3, 2, NOW(), NOW()),
+(3, 4, NOW(), NOW()),
+(4, 1, NOW(), NOW()),
+(4, 2, NOW(), NOW()),
+(5, 1, NOW(), NOW()),
+(5, 2, NOW(), NOW());
+
+INSERT INTO product_attribute_values (product_id, attribute_value_id, created_at, updated_at) VALUES
+-- Стул Capella
+('975e0b50-c180-4131-bd6b-f9d9adc85a33', 5, NOW(), NOW()), -- Серый
+('975e0b50-c180-4131-bd6b-f9d9adc85a33', 15, NOW(), NOW()), -- Дерево
+('975e0b50-c180-4131-bd6b-f9d9adc85a33', 18, NOW(), NOW()), -- Гостиная
+('975e0b50-c180-4131-bd6b-f9d9adc85a33', 21, NOW(), NOW()), -- Современный
+
+-- Кресло Oslo
+('24fab6ce-86b3-4751-af3b-9beee8ca6d47', 14, NOW(), NOW()),
+('24fab6ce-86b3-4751-af3b-9beee8ca6d47', 15, NOW(), NOW()),
+('24fab6ce-86b3-4751-af3b-9beee8ca6d47', 18, NOW(), NOW()),
+('24fab6ce-86b3-4751-af3b-9beee8ca6d47', 22, NOW(), NOW()),
+
+-- Диван Milan
+('199e8913-f365-46c0-8a69-79bcfffa574f', 13, NOW(), NOW()),
+('199e8913-f365-46c0-8a69-79bcfffa574f', 14, NOW(), NOW()),
+('199e8913-f365-46c0-8a69-79bcfffa574f', 8, NOW(), NOW()),
+('199e8913-f365-46c0-8a69-79bcfffa574f', 21, NOW(), NOW()),
+
+-- Стол Loft
+('d3853da4-b111-48ed-b02f-114090bc6dd8', 13, NOW(), NOW()),
+('d3853da4-b111-48ed-b02f-114090bc6dd8', 19, NOW(), NOW()),
+('d3853da4-b111-48ed-b02f-114090bc6dd8', 20, NOW(), NOW()),
+
+-- Шкаф Line
+('668befa8-dfc2-41cb-b83f-b77efa87439c', 4, NOW(), NOW()),
+('668befa8-dfc2-41cb-b83f-b77efa87439c', 15, NOW(), NOW()),
+('668befa8-dfc2-41cb-b83f-b77efa87439c', 22, NOW(), NOW());

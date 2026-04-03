@@ -1,4 +1,4 @@
-import { Field, InputType } from '@nestjs/graphql';
+import { Field, ID, InputType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateProductImageInput {
@@ -10,4 +10,8 @@ export class CreateProductImageInput {
     description: 'Whether the product image is the main image',
   })
   isMain: boolean;
+  @Field(() => ID, {
+    description: 'ID of product',
+  })
+  productId: string;
 }

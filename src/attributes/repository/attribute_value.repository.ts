@@ -75,7 +75,7 @@ export class AttributeValueRepository {
     `;
   }
 
-  async findFacets(categorySlug: string): Promise<
+  async findFacets(categorySlug?: string): Promise<
     Array<{
       id: number | string;
       name: string;
@@ -83,18 +83,24 @@ export class AttributeValueRepository {
       count: string | number;
     }>
   > {
+    let where = Prisma.empty;
+
+    if (categorySlug) {
+      where = Prisma.sql`WHERE c.slug = ${categorySlug}`;
+    }
+
     return this.prisma.$queryRaw`
       SELECT
       a.id,
       a.name,
       av.value,
-      COUNT(*) as count
+      COUNT(DISTINCT p.id) as count
       FROM Attributes a
       JOIN Attribute_values av ON a.id = av.attribute_id
       JOIN product_attribute_values pav ON av.id = pav.attribute_value_id
       JOIN Products p ON p.id = pav.product_id
       JOIN Categories c ON c.id = p.category_id
-      WHERE c.slug = ${categorySlug}
+      ${where}
       GROUP BY a.id, a.name, av.value
       ORDER BY a.id
     `;

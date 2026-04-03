@@ -17,7 +17,7 @@ export class TokenService {
     role: string;
   }): ITokens {
     const accessToken = this.jwtService.sign(payload, {
-      expiresIn: '30s',
+      expiresIn: '30m',
     });
     const refreshToken = this.jwtService.sign(payload, {
       expiresIn: '30d',

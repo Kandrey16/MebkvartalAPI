@@ -1,12 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateProductType, UpdateProductType } from '../schema/product.schema';
 import { ProductRepository } from '../repository/product.repository';
+import { ProductImageRepository } from '../repository/product_image.repository';
 import { AttributeValueService } from 'src/attributes/services/attribute_value.service';
 
 @Injectable()
 export class ProductsService {
   constructor(
     private readonly productRepository: ProductRepository,
+    private readonly productImageRepository: ProductImageRepository,
     private readonly attributeValueService: AttributeValueService,
   ) {}
 
@@ -15,13 +17,29 @@ export class ProductsService {
   }
 
   async findAll(categorySlug?: string, filter?: string[]) {
-    if (!categorySlug) throw new Error('Category slug required');
-
     const [items, facetsCount, totalCount] = await Promise.all([
       this.productRepository.findProductsWithParams(categorySlug, filter),
       this.attributeValueService.findProductFacets(categorySlug),
       this.productRepository.countProductsWithParams(categorySlug, filter),
     ]);
+
+    const productIds = (items as { id: string }[]).map((p) => p.id);
+    const images =
+      await this.productImageRepository.findByProductIds(productIds);
+    const imagesByProductId = new Map<string, typeof images>();
+    for (const img of images) {
+      const list = imagesByProductId.get(img.productId);
+      if (list) {
+        list.push(img);
+      } else {
+        imagesByProductId.set(img.productId, [img]);
+      }
+    }
+
+    const itemsWithImages = (items as Record<string, unknown>[]).map((p) => ({
+      ...p,
+      productImages: imagesByProductId.get(p.id as string) ?? [],
+    }));
 
     const facetByAttributeId = new Map();
 
@@ -41,14 +59,14 @@ export class ProductsService {
     }
 
     return {
-      items,
+      items: itemsWithImages,
       facets: Array.from(facetByAttributeId.values()),
       total: Number(totalCount[0].count),
     };
   }
 
-  async findOne(id: string) {
-    return this.productRepository.findOne(id);
+  async findOneBySlug(slug: string) {
+    return this.productRepository.findOneBySlug(slug);
   }
 
   async findIdByCategoryId(categoryId: number) {

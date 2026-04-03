@@ -5,12 +5,13 @@ import cookieParser from 'cookie-parser';
 
 async function start() {
   const PORT = process.env.PORT || 3000;
-  const app = await NestFactory.create(AppModule, { cors: true });
+  const app = await NestFactory.create(AppModule);
 
   app.use(cookieParser());
+  const origins = [process.env.MAIL_URL, process.env.CLIENT_URL];
 
   app.enableCors({
-    origin: process.env.CLIENT_URL,
+    origin: origins,
     credentials: true,
   });
 
