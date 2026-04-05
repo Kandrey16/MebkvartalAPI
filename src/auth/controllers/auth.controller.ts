@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Param, Post, Req, Res } from '@nestjs/common';
 import { AuthService } from '../services/auth.service';
 import { SignUpInput } from '../dto/signUp.input';
+import { SignInInput } from '../dto/signIn.input';
 import type { Response, Request } from 'express';
 import { Public } from '../decopators/public.decorator';
 import { extractDeviceInfo } from '../guards/extractDeviceInfo';
@@ -36,7 +37,7 @@ export class AuthController {
   @Public()
   @Post('signIn')
   async signIn(
-    @Body() input: SignUpInput,
+    @Body() input: SignInInput,
     @Res() res: Response,
     @Req() req: Request,
   ) {
@@ -59,6 +60,7 @@ export class AuthController {
   }
 
   @Public()
+  @Post('refresh')
   async refresh(@Res() res: Response, @Req() req: Request) {
     const refreshToken = req.cookies?.refreshToken;
     const deviceInfo = extractDeviceInfo(req);
@@ -71,7 +73,7 @@ export class AuthController {
   }
 
   @Public()
-  @Post('logOut')
+  @Post('logout')
   async logOut(@Res({ passthrough: true }) res: Response, @Req() req: Request) {
     const refreshToken = req.cookies?.refreshToken;
     if (typeof refreshToken === 'string') {
