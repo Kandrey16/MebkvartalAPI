@@ -56,7 +56,6 @@ export class AuthService {
     });
 
     await this.mailService.sendActivationMail(user.email, activationLink);
-
     return this.issueTokens(user, deviceInfo);
   }
 

@@ -56,7 +56,7 @@ export class AuthController {
   @Get('activate/:link')
   async activate(@Param('link') link: string, @Res() res: Response) {
     await this.authService.activate(link);
-    return res.redirect(process.env.MAIL_URL ?? '/');
+    return res.redirect(`${process.env.CLIENT_URL}/`);
   }
 
   @Public()

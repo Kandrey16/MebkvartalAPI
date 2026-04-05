@@ -17,9 +17,11 @@ export class TokenService {
     role: string;
   }): ITokens {
     const accessToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_ACCESS_SECRET,
       expiresIn: '30m',
     });
     const refreshToken = this.jwtService.sign(payload, {
+      secret: process.env.JWT_REFRESH_SECRET,
       expiresIn: '30d',
     });
 
